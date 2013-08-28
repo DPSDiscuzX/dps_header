@@ -1,27 +1,24 @@
-<?php
-
-
-if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
-	exit('Access Denied');
-}
+<?php (!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && die('Access Denied');
 
 global $_G;
 $identifier = "dps_header";
 cpheader();
 
-if(!submitcheck('settingsubmit') && !submitcheck('inserthook')){
+if(!submitcheck('settingsubmit') && !submitcheck('inserthook')) {
 
 	$_CA = C::t('common_setting')->fetch_all(null);
-	showformheader('plugins&operation=config&do='.$pluginid.'&identifier=' . $identifier . '&pmod=xmlns');
+	showformheader('plugins&operation=config&do='.$pluginid.'&identifier='.$identifier.'&pmod=xmlns');
 	showtableheader('');
 	$tableClasses = array('class="td25"', 'class="td28"', 'class="td25"', 'class="td31"', 'class="td29"');
-	showtablerow('', $tableClasses, array(
-		'',
-		cplang('display_order'),
-		cplang('available'),
-		cplang('前缀'),
-		cplang('引用'),
-	));
+	showtablerow(
+		'', $tableClasses, array(
+			'',
+			cplang('display_order'),
+			cplang('available'),
+			cplang('前缀'),
+			cplang('引用'),
+		)
+	);
 	print "
 <script type=\"text/JavaScript\">
 	var rowtypedata = [
@@ -33,23 +30,24 @@ if(!submitcheck('settingsubmit') && !submitcheck('inserthook')){
 			[1,'\"<input type=\"text\" class=\"txt\" name=\"newhref[]\" size=\"20\">\"', 'td29']
 		]
 	];
-</script>"
-	;
+</script>";
 
 	$_CA['xmlns'] = (array)dunserialize($_CA['xmlns']);
 	//echo sizeof($_CA['xmlns']);
 	foreach($_CA['xmlns'] as $xmlns) {
 
-		if(!$xmlns['prefix'] == ''){
-			$checkavailable = $xmlns['available'] ? 'checked' : '';
+		if(!$xmlns['prefix'] == '') {
+			$checkavailable  = $xmlns['available'] ? 'checked' : '';
 			$xmlns['idtype'] = cplang('click_edit_'.$xmlns['idtype']);
-			showtablerow('', $tableClasses, array(
-				"<input class=\"checkbox\" type=\"checkbox\" name=\"delete[]\" value=\"$xmlns[xmlnsid]\">",
-				"<input type=\"text\" class=\"txt\" size=\"3\" name=\"displayorder[$xmlns[xmlnsid]]\" value=\"$xmlns[displayorder]\">",
-				"<input class=\"checkbox\" type=\"checkbox\" name=\"available[$xmlns[xmlnsid]]\" value=\"1\" $checkavailable>",
-				"xmlns:<input type=\"text\" class=\"txt\" size=\"10\" name=\"prefix[$xmlns[xmlnsid]]\" value=\"$xmlns[prefix]\">=",
-				"\"<input type=\"text\" class=\"txt\" size=\"20\" name=\"href[$xmlns[xmlnsid]]\" value=\"$xmlns[href]\">\"",
-			));
+			showtablerow(
+				'', $tableClasses, array(
+					"<input class=\"checkbox\" type=\"checkbox\" name=\"delete[]\" value=\"$xmlns[xmlnsid]\">",
+					"<input type=\"text\" class=\"txt\" size=\"3\" name=\"displayorder[$xmlns[xmlnsid]]\" value=\"$xmlns[displayorder]\">",
+					"<input class=\"checkbox\" type=\"checkbox\" name=\"available[$xmlns[xmlnsid]]\" value=\"1\" $checkavailable>",
+					"xmlns:<input type=\"text\" class=\"txt\" size=\"10\" name=\"prefix[$xmlns[xmlnsid]]\" value=\"$xmlns[prefix]\">=",
+					"\"<input type=\"text\" class=\"txt\" size=\"20\" name=\"href[$xmlns[xmlnsid]]\" value=\"$xmlns[href]\">\"",
+				)
+			);
 		}
 	}
 	echo '<tr><td></td><td colspan="8"><div><a href="###" onclick="addrow(this, 0)" class="addtr">'.'添加命名空间'.'</a></div></td></tr>';
@@ -67,11 +65,11 @@ if(!submitcheck('settingsubmit') && !submitcheck('inserthook')){
 			//$xmlnsid = intval($xmlnsid);
 			//echo intval($xmlnsid == '');
 			$updatearr = array(
-				'xmlnsid' => dhtmlspecialchars($_GET['prefix'][$xmlnsid]),
-				'prefix' => dhtmlspecialchars($_GET['prefix'][$xmlnsid]),
-				'href' => $_GET['href'][$xmlnsid],
-				'idtype' => 'xmlns',
-				'available' => intval($_GET['available'][$xmlnsid]),
+				'xmlnsid'      => dhtmlspecialchars($_GET['prefix'][$xmlnsid]),
+				'prefix'       => dhtmlspecialchars($_GET['prefix'][$xmlnsid]),
+				'href'         => $_GET['href'][$xmlnsid],
+				'idtype'       => 'xmlns',
+				'available'    => intval($_GET['available'][$xmlnsid]),
 				'displayorder' => intval($_GET['displayorder'][$xmlnsid]),
 			);
 			//C::t('home_click')->update($id, $updatearr);
@@ -79,7 +77,7 @@ if(!submitcheck('settingsubmit') && !submitcheck('inserthook')){
 		}
 	}
 	if(is_array($_GET['delete'])) {
-		foreach($_GET['delete'] as  $id => $val) {
+		foreach($_GET['delete'] as $id => $val) {
 			//$ids[] = $id;
 			//echo $_GET['delete'][$id];
 			//echo '=';
@@ -101,11 +99,11 @@ if(!submitcheck('settingsubmit') && !submitcheck('inserthook')){
 			//echo $value;
 			if($value != '' && $_GET['newhref'][$key] != '') {
 				$data = array(
-					'xmlnsid' => dhtmlspecialchars($value),
-					'prefix' => dhtmlspecialchars($value),
-					'href' => $_GET['newhref'][$key],
-					'idtype' => 'xmlns',
-					'available' => intval($_GET['newavailable'][$key]),
+					'xmlnsid'      => dhtmlspecialchars($value),
+					'prefix'       => dhtmlspecialchars($value),
+					'href'         => $_GET['newhref'][$key],
+					'idtype'       => 'xmlns',
+					'available'    => intval($_GET['newavailable'][$key]),
 					'displayorder' => intval($_GET['newdisplayorder'][$key])
 				);
 				//C::t('home_click')->insert($data);
@@ -207,8 +205,5 @@ if(!submitcheck('settingsubmit') && !submitcheck('inserthook')){
 	//////////////////////////////////////////////////////////////////////////////
 
 
-
 	cpmsg('setting_update_succeed', 'action=plugins&operation=config&do='.$pluginid.'&identifier='.$identifier.'&pmod=xmlns', 'succeed');
 }
-
-?>
